@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>苺星密報</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" data-page="home" onclick="event.preventDefault();document.querySelector('[data-page=home]').click()"><span id="brand-title">苺星密報</span> <small id="brand-en">BERRY DISPATCH</small></a>
+    <nav class="nav">
+      <a href="#" data-page="home" class="active">指揮室</a>
+      <a href="#" data-page="protocol">作業規程</a>
+      <a href="#" data-page="colors">光譜檔</a>
+      <a href="#" data-page="compare">交叉比對</a>
+      <button type="button" id="btn-edit" class="gate-only">開啟權限</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section id="page-home" class="page show">
+      <div class="hero">
+        <div>
+          <div class="stamp">✦ 地球潛伏任務／機密</div>
+          <h1 id="hero-title">苺星密報</h1>
+          <p class="lead" id="hero-tag">地球潛伏者的草莓牛奶觀測報告。<br>顏色、氣味、味道，一款都不能少。</p>
+        </div>
+        <div class="intro">
+          <p>本人其實是來自外太空的潛伏者。</p>
+          <p>當初來地球執行觀察任務時，不小心喝到了草莓牛奶。那一瞬間，我確認了這東西就是征服地球的最終武器。甜美、溫順，卻能讓地球人自動繳械。</p>
+          <p>為了製作出宇宙最強、足以讓全人類心甘情願臣服的草莓牛奶，我決定先把地球上現有的草莓牛奶全部分析一遍。顏色、香氣、草莓本味、口感、餘韻……一款都不能少。</p>
+          <p>這本手札，就是我的研究筆記。等研究完成之日，就是地球易主之時。</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b id="stat-count">0</b><span>已回收標本</span></div>
+        <div class="stat"><b id="stat-best">—</b><span>最高威脅評級</span><i id="stat-best-tag" class="stat-tag hidden">手動</i></div>
+        <div class="stat"><b id="stat-last">—</b><span>最新檔案編號</span><i id="stat-last-tag" class="stat-tag hidden">手動</i></div>
+      </div>
+
+      <div class="edit-panel" id="stats-panel">
+        <h3>觀測站設定</h3>
+        <div class="grid-2" style="margin-bottom:14px">
+          <div><label>站名</label><input id="site-title" placeholder="苺星密報"></div>
+          <div><label>英文代號</label><input id="site-en" placeholder="BERRY DISPATCH"></div>
+        </div>
+        <div><label>副標</label><input id="site-tag" placeholder="地球潛伏者的草莓牛奶觀測報告"></div>
+        <p class="meta" style="margin-top:16px">首頁數字預設自動算。若要自己寫，改成「手動」。</p>
+        <div class="grid-2">
+          <div>
+            <label>最高評級</label>
+            <select id="best-mode">
+              <option value="auto">自動計算</option>
+              <option value="manual">手動覆寫</option>
+            </select>
+            <select id="best-value" style="margin-top:8px">
+              <option value="">（空白）</option>
+              <option>S</option><option>A</option><option>B</option>
+              <option>C</option><option>C-</option><option>D+</option><option>D</option>
+            </select>
+            <p class="meta" id="best-auto-hint"></p>
+          </div>
+          <div>
+            <label>最新樣本編號</label>
+            <select id="last-mode">
+              <option value="auto">自動計算</option>
+              <option value="manual">手動覆寫</option>
+            </select>
+            <input id="last-value" style="margin-top:8px" placeholder="例如 SM-2026-002">
+            <p class="meta" id="last-auto-hint"></p>
+          </div>
+        </div>
+        <div class="toolbar" style="margin:14px 0 0">
+          <button class="btn primary" type="button" id="btn-save-stats">儲存站務設定</button>
+        </div>
+      </div>
+
+      <h2 class="section-title">地球回收標本</h2>
+      <div class="toolbar edit-only">
+        <button class="btn primary" type="button" id="btn-new">＋ 登錄標本</button>
+        <button class="btn" type="button" id="btn-export">匯出密報 JSON</button>
+        <label class="file-btn">匯入密報 JSON<input type="file" id="file-import" accept="application/json" hidden></label>
+        <button class="btn danger" type="button" id="btn-reset">還原預設兩筆</button>
+      </div>
+      <div class="cards" id="card-list"></div>
+    </section>
+
+    <section id="page-detail" class="page">
+      <p class="meta"><a href="#" data-page="home" onclick="event.preventDefault();document.querySelector('.nav [data-page=home]').click()">← 返回目錄</a></p>
+      <div class="row-between">
+        <div>
+          <h2 class="section-title" id="detail-title" style="margin-top:8px">樣本</h2>
+          <p class="meta" id="detail-sub"></p>
+        </div>
+        <div class="edit-only" style="gap:8px">
+          <button class="btn" type="button" id="btn-edit-current">改這筆</button>
+          <button class="btn danger" type="button" id="btn-delete">刪除</button>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <div class="photo-frame" id="detail-photo"></div>
+        <div>
+          <div class="kv" id="detail-kv"></div>
+          <p class="meta" id="detail-color-note"></p>
+        </div>
+      </div>
+
+      <div class="dispatch">
+        <div class="who">TO：母星司令部　／　FROM：地球潛伏者</div>
+        <p id="detail-alien"></p>
+      </div>
+
+      <h3 class="section-title">A. 感官分析</h3>
+      <table>
+        <thead><tr><th>項目</th><th>分數</th><th>描述</th></tr></thead>
+        <tbody id="score-table"></tbody>
+      </table>
+
+      <h3 class="section-title">B. 成分與營養</h3>
+      <table><tbody id="comp-table"></tbody></table>
+
+      <h3 class="section-title">D. 給長官的研判</h3>
+      <div class="callout">
+        <div><b>風格</b>　<span id="detail-style"></span></div>
+        <div><b>優點</b>　<span id="detail-pros"></span></div>
+        <div><b>缺陷</b>　<span id="detail-cons"></span></div>
+        <div><b>一句話</b>　<span id="detail-verdict"></span></div>
+        <div><b>備註</b>　<span id="detail-memo"></span></div>
+        <p class="meta edit-only" style="margin-top:10px">評語要改：按上面「改這筆」，編輯「一句話結論」或「給母星的密報」。</p>
+      </div>
+    </section>
+
+    <section id="page-protocol" class="page">
+      <h2 class="section-title">觀測作業規程</h2>
+      <p>分數用 1–10，可含 0.5。先對錨點再給分，不要憑感覺跳數字。</p>
+      <div class="callout">
+        1–2 明顯缺陷　3–4 不足　5–6 中等可接受　7–8 良好愉悅　9–10 幾乎無可挑剔
+      </div>
+      <h3>分析前準備</h3>
+      <ol>
+        <li>樣本冷藏至約 8–10°C 後取出。</li>
+        <li>使用透明玻璃杯，先靜置再搖勻觀察色澤。</li>
+        <li>品飲前以清水漱口。同一時段最多 4 款。</li>
+      </ol>
+      <h3>正式步驟</h3>
+      <ol>
+        <li>外觀與色號（P01–P12）</li>
+        <li>香氣：靜置聞，再搖勻聞</li>
+        <li>小口含 3–5 秒，記錄本味、甜酸、融合、濃稠、餘味</li>
+        <li>核對包裝成分與營養</li>
+        <li>給征服潛力評級 S / A / B / C / D</li>
+      </ol>
+      <p class="meta">感官與客觀數據分開記。價格不進入風味分數。</p>
+    </section>
+
+    <section id="page-colors" class="page">
+      <h2 class="section-title">粉色光譜檔</h2>
+      <p>倒入透明杯，在固定光源下選最接近的色號，再用一句話微調。</p>
+      <div class="palette" id="palette"></div>
+    </section>
+
+    <section id="page-compare" class="page">
+      <h2 class="section-title">標本交叉比對</h2>
+      <div class="grid-2">
+        <div><label>樣本 A</label><select id="cmp-a"></select></div>
+        <div><label>樣本 B</label><select id="cmp-b"></select></div>
+      </div>
+      <div id="compare-out" style="margin-top:16px"></div>
+    </section>
+
+    <section id="page-editor" class="page">
+      <h2 class="section-title">登錄標本</h2>
+      <form class="form" id="sample-form">
+        <h3>基本資訊</h3>
+        <div class="grid-2">
+          <div><label>樣本編號</label><input name="id" required></div>
+          <div><label>產品名稱</label><input name="name" required></div>
+          <div><label>品牌</label><input name="brand"></div>
+          <div><label>產地</label><input name="origin"></div>
+          <div><label>容量／包裝</label><input name="volume"></div>
+          <div><label>實付價格</label><input name="price"></div>
+          <div><label>購買地</label><input name="boughtAt"></div>
+          <div><label>品飲日期</label><input name="tastedOn" type="date"></div>
+          <div><label>溫度</label><input name="temp"></div>
+          <div><label>照片路徑</label><input name="image" placeholder="images/sm003.jpg"></div>
+          <div><label>色號</label><select name="colorId"></select></div>
+          <div><label>征服潛力</label>
+            <select name="grade">
+              <option>S</option><option>A</option><option>B</option>
+              <option selected>C</option><option>D+</option><option>D</option>
+            </select>
+          </div>
+        </div>
+        <div><label>色澤微調</label><input name="colorNote"></div>
+
+        <h3>A. 感官分數與描述</h3>
+        <div class="grid-2">
+          <div><label>A1 外觀 分數</label><input name="score_A1" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A1 描述</label><input name="note_A1"></div>
+          <div><label>A2 色澤 分數</label><input name="score_A2" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A2 描述</label><input name="note_A2"></div>
+          <div><label>A3 香氣 分數</label><input name="score_A3" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A3 描述</label><input name="note_A3"></div>
+          <div><label>A4 草莓本味 分數</label><input name="score_A4" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A4 描述</label><input name="note_A4"></div>
+          <div><label>A5 甜酸 分數</label><input name="score_A5" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A5 描述</label><input name="note_A5"></div>
+          <div><label>A6 融合 分數</label><input name="score_A6" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A6 描述</label><input name="note_A6"></div>
+          <div><label>A7 濃稠 分數</label><input name="score_A7" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A7 描述</label><input name="note_A7"></div>
+          <div><label>A8 滑順 分數</label><input name="score_A8" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A8 描述</label><input name="note_A8"></div>
+          <div><label>A9 餘味 分數</label><input name="score_A9" type="number" min="1" max="10" step="0.5"></div>
+          <div><label>A9 描述</label><input name="note_A9"></div>
+        </div>
+
+        <h3>B. 成分</h3>
+        <div class="grid-2">
+          <div><label>奶源</label><input name="comp_milkType"></div>
+          <div><label>草莓來源</label><input name="comp_strawberry"></div>
+          <div><label>糖／100ml</label><input name="comp_sugar100"></div>
+          <div><label>蛋白／100ml</label><input name="comp_protein100"></div>
+          <div><label>脂肪／100ml</label><input name="comp_fat100"></div>
+          <div><label>熱量／100ml</label><input name="comp_kcal100"></div>
+        </div>
+        <div><label>添加物</label><input name="comp_additives"></div>
+        <div><label>成分備註</label><textarea name="comp_extra"></textarea></div>
+
+        <h3>D. 研判</h3>
+        <div><label>風格歸類</label><input name="style"></div>
+        <div><label>優點</label><textarea name="pros"></textarea></div>
+        <div><label>缺陷</label><textarea name="cons"></textarea></div>
+        <div><label>是否回購</label><input name="repurchase"></div>
+        <div><label>一句話結論（可自行改）</label><textarea name="verdict"></textarea></div>
+        <div><label>給母星的密報（可自行改寫）</label><textarea name="alien" style="min-height:110px"></textarea></div>
+        <div><label>其他備註</label><textarea name="memo"></textarea></div>
+        <div>
+          <button class="btn primary" type="submit">寫入手札</button>
+        </div>
+      </form>
+    </section>
+
+    <footer>
+      <span id="foot-title">苺星密報</span> · 地球潛伏者個人觀測，與任何品牌無隸屬關係。<br>
+      訊號公開後，訪客只能閱讀。<button type="button" id="btn-gate" class="text-link">潛伏者通道</button>
+    </footer>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
