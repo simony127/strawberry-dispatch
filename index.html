@@ -17,7 +17,10 @@
       <a href="#" data-page="protocol">作業規程</a>
       <a href="#" data-page="colors">光譜檔</a>
       <a href="#" data-page="compare">交叉比對</a>
+      <button type="button" id="btn-new-nav" class="gate-only">＋ 登錄標本</button>
       <button type="button" id="btn-edit" class="gate-only">開啟權限</button>
+      <span id="auth-label" class="meta"></span>
+      <button type="button" id="btn-logout" class="gate-only">登出</button>
     </nav>
   </header>
 
@@ -173,6 +176,17 @@
       <div id="compare-out" style="margin-top:16px"></div>
     </section>
 
+    <section id="page-login" class="page">
+      <h2 class="section-title">觀測員登入</h2>
+      <form class="form" id="login-form">
+        <p class="meta">朋友用你在 Supabase 開好的電郵和密碼登入後，才能新增標本和上傳照片。</p>
+        <div><label>電郵</label><input name="email" type="email" required></div>
+        <div><label>密碼</label><input name="password" type="password" required></div>
+        <div><button class="btn primary" type="submit">登入</button></div>
+        <p class="meta" id="login-msg"></p>
+      </form>
+    </section>
+
     <section id="page-editor" class="page">
       <h2 class="section-title">登錄標本</h2>
       <form class="form" id="sample-form">
@@ -187,7 +201,8 @@
           <div><label>購買地</label><input name="boughtAt"></div>
           <div><label>品飲日期</label><input name="tastedOn" type="date"></div>
           <div><label>溫度</label><input name="temp"></div>
-          <div><label>照片路徑</label><input name="image" placeholder="images/sm003.jpg"></div>
+          <div><label>照片路徑或網址</label><input name="image" placeholder="images/sm003.jpg"></div>
+          <div><label>直接上傳照片</label><input name="photoFile" type="file" accept="image/*"></div>
           <div><label>色號</label><select name="colorId"></select></div>
           <div><label>征服潛力</label>
             <select name="grade">
@@ -248,11 +263,21 @@
 
     <footer>
       <span id="foot-title">苺星密報</span> · 地球潛伏者個人觀測，與任何品牌無隸屬關係。<br>
-      訊號公開後，訪客只能閱讀。<button type="button" id="btn-gate" class="text-link">潛伏者通道</button>
+      訪客只能閱讀。觀測員請登入後再寫新標本。
+      <div id="auth-box" class="auth-box">
+        <input id="auth-email" type="email" placeholder="電郵">
+        <input id="auth-pass" type="password" placeholder="密碼">
+        <button type="button" class="btn" id="btn-login">登入</button>
+        <button type="button" class="btn" id="btn-signup">註冊</button>
+      </div>
+      <button type="button" id="btn-gate" class="text-link">本機密語通道</button>
     </footer>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script src="data.js"></script>
+  <script src="cloud.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

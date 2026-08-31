@@ -20,7 +20,7 @@ const state = {
   formMode: "create"
 };
 
-function load() {
+function loadLocal() {
   try {
     const raw = localStorage.getItem(STORE);
     if (raw) {
@@ -36,6 +36,39 @@ function load() {
 
 function save() {
   localStorage.setItem(STORE, JSON.stringify(state.data));
+}
+
+function syncAuthUI() {
+  const user = window.Cloud && window.Cloud.user;
+  if (user) {
+    document.body.classList.add("is-officer", "is-editing");
+    state.editing = true;
+    if ($("#auth-label")) $("#auth-label").textContent = user.email || "已登入";
+    if ($("#auth-box")) $("#auth-box").classList.add("hidden");
+  } else {
+    if ($("#auth-label")) $("#auth-label").textContent = "";
+    if ($("#auth-box")) $("#auth-box").classList.remove("hidden");
+  }
+}
+
+async function bootCloud() {
+  loadLocal();
+  if (!window.Cloud || !window.SUPABASE_ANON_KEY) {
+    syncAuthUI();
+    renderAll();
+    return;
+  }
+  try {
+    const ok = await window.Cloud.init();
+    if (ok) {
+      const rows = await window.Cloud.fetchSamples();
+      if (rows && rows.length) state.data.samples = rows;
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+  syncAuthUI();
+  renderAll();
 }
 
 function avg(sample) {
@@ -255,10 +288,22 @@ function readForm() {
   };
 }
 
-function persistForm(e) {
+async function persistForm(e) {
   e.preventDefault();
   const item = readForm();
   if (!item.name) { alert("請至少填產品名稱"); return; }
+  const file = $("#sample-form").photoFile && $("#sample-form").photoFile.files[0];
+  try {
+    if (file && window.Cloud && window.Cloud.ready && window.Cloud.user) {
+      item.image = await window.Cloud.uploadPhoto(item.id, file);
+    }
+    if (window.Cloud && window.Cloud.ready && window.Cloud.user) {
+      await window.Cloud.upsertSample(item);
+    }
+  } catch (err) {
+    alert("雲端儲存失敗：" + (err.message || err) + "。請確認已登入，且後台表格已建好。");
+    return;
+  }
   const i = state.data.samples.findIndex(s => s.id === item.id);
   if (i >= 0) state.data.samples[i] = item;
   else state.data.samples.push(item);
@@ -267,9 +312,17 @@ function persistForm(e) {
   openDetail(item.id);
 }
 
-function deleteCurrent() {
+async function deleteCurrent() {
   if (!state.currentId) return;
   if (!confirm("確定從手札刪除 " + state.currentId + "？")) return;
+  try {
+    if (window.Cloud && window.Cloud.ready && window.Cloud.user) {
+      await window.Cloud.deleteSample(state.currentId);
+    }
+  } catch (err) {
+    alert("雲端刪除失敗：" + (err.message || err));
+    return;
+  }
   state.data.samples = state.data.samples.filter(s => s.id !== state.currentId);
   save();
   renderAll();
@@ -400,7 +453,13 @@ function tryUnlock() {
   const expect = (state.data.site && state.data.site.adminCode) || "苺星指揮";
   if (code && code.trim() === expect) {
     setOfficer(true);
-    alert("權限已開。這裡改的內容只在你這部裝置。要讓大家看到，請匯出 JSON，把內容更新到 data.js 再上傳。");
+    state.editing = true;
+    document.body.classList.add("is-editing");
+    if ($("#btn-edit")) {
+      $("#btn-edit").textContent = "關閉權限";
+      $("#btn-edit").classList.add("edit-on");
+    }
+    alert("權限已開。右上「＋ 登錄標本」可寫新測評。這台瀏覽器看得到；要讓所有人看到，還要把更新後的 data.js 傳到 GitHub。");
   } else if (code !== null) {
     alert("密語不正確。");
   }
@@ -425,14 +484,15 @@ function renderAll() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  load();
+  bootCloud();
   if (isOfficer()) document.body.classList.add("is-officer");
-  renderAll();
   document.querySelectorAll(".nav a[data-page]").forEach(a => {
     a.onclick = (e) => { e.preventDefault(); show(a.dataset.page); };
   });
   $("#btn-edit").onclick = toggleEdit;
-  $("#btn-new").onclick = () => { state.formMode = "create"; fillForm(null); show("editor"); };
+  const openNew = () => { state.formMode = "create"; fillForm(null); show("editor"); };
+  $("#btn-new").onclick = openNew;
+  if ($("#btn-new-nav")) $("#btn-new-nav").onclick = openNew;
   $("#btn-edit-current").onclick = () => {
     const s = state.data.samples.find(x => x.id === state.currentId);
     if (!s) return;
@@ -452,5 +512,25 @@ window.addEventListener("DOMContentLoaded", () => {
     const f = e.target.files[0];
     if (f) importJson(f);
     e.target.value = "";
+  };
+  if ($("#btn-login")) $("#btn-login").onclick = async () => {
+    const email = $("#auth-email").value.trim();
+    const pass = $("#auth-pass").value;
+    if (!email || !pass) { alert("請填電郵和密碼"); return; }
+    try {
+      await window.Cloud.signIn(email, pass);
+      syncAuthUI();
+      alert("已登入。現在新增的標本會存到共用後台。");
+    } catch (err) {
+      alert("登入失敗：" + (err.message || err));
+    }
+  };
+  if ($("#btn-signup")) $("#btn-signup").onclick = async () => {
+    alert("請讓站長在 Supabase → Authentication → Users 先開好帳號，再用電郵密碼登入。");
+  };
+  if ($("#btn-logout")) $("#btn-logout").onclick = async () => {
+    if (window.Cloud) await window.Cloud.signOut();
+    setOfficer(false);
+    syncAuthUI();
   };
 });

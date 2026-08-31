@@ -1,0 +1,2 @@
+window.SUPABASE_URL = "https://stvsclejbbyniwaybiak.supabase.co";
+window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0dnNjbGVqYmJ5bml3YXliaWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxNTk2NzcsImV4cCI6MjEwMzczNTY3N30.aDqbhn-hKzkizyQoBcODWGobbXShcAAKUrMW7nusZE8";
