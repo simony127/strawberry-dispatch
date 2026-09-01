@@ -86,6 +86,34 @@ function imgSrc(path) {
   return String(path).replace(/\\/g, "/");
 }
 
+const COUNTRIES = {
+  HK: { flag: "🇭🇰", name: "香港" },
+  JP: { flag: "🇯🇵", name: "日本" },
+  TW: { flag: "🇹🇼", name: "台灣" },
+  KR: { flag: "🇰🇷", name: "韓國" },
+  CN: { flag: "🇨🇳", name: "中國大陸" },
+  TH: { flag: "🇹🇭", name: "泰國" },
+  SG: { flag: "🇸🇬", name: "新加坡" },
+  US: { flag: "🇺🇸", name: "美國" },
+  EU: { flag: "🇪🇺", name: "歐洲" },
+  OT: { flag: "🌐", name: "其他" }
+};
+
+function countryOf(sample) {
+  const code = sample.country || sample.composition?.country || "";
+  return COUNTRIES[code] || null;
+}
+
+function specOf(sample) {
+  const c = sample.composition || {};
+  return {
+    pack: sample.spec?.pack || c.pack || "",
+    storage: sample.spec?.storage || c.storage || "",
+    access: sample.spec?.access || c.access || "",
+    value: sample.spec?.value || c.valueNote || ""
+  };
+}
+
 function alienBlurb(text) {
   if (!text) return "";
   const cut = text.split("潛伏者評語")[1] || text;
@@ -146,7 +174,7 @@ function renderHome() {
       <div class="body">
         <div class="row-between"><span class="id">${s.id}</span><span class="grade ${s.grade}">${s.grade || "—"}</span></div>
         <h3>${s.name}</h3>
-        <div class="meta">${s.brand || ""} · ${s.volume || ""}</div>
+        <div class="meta">${(() => { const g = countryOf(s); return g ? `<span class="nation">${g.flag} ${g.name}</span> · ` : ""; })()}${s.brand || ""} · ${s.volume || ""}</div>
         <div style="margin-top:8px" class="chip"><span class="swatch" style="background:${c?.hex || "#eee"}"></span>${s.colorId || "未定色"} · 感官 ${avg(s) ?? "—"}</div>
         ${s.alien ? `<div class="alien-line">${alienBlurb(s.alien)}</div>` : ""}
       </div>
@@ -167,7 +195,9 @@ function openDetail(id) {
     ? `<img src="${imgSrc(s.image)}" alt="${s.name}">`
     : `<div style="height:280px;background:${c?.hex || "#f3d0d4"}"></div>`;
   $("#detail-kv").innerHTML = [
-    ["品牌", s.brand], ["產地", s.origin], ["容量", s.volume],
+    ["品牌", s.brand],
+    ["國家／地區", (() => { const g = countryOf(s); return g ? g.flag + " " + g.name : s.origin; })()],
+    ["產地說明", s.origin], ["容量", s.volume],
     ["品飲日期", s.tastedOn], ["溫度", s.temp], ["售價", s.price || "未記入"],
     ["色號", `${s.colorId || "—"} ${c ? c.name : ""}`],
     ["感官均分", a ?? "—"], ["回購", s.repurchase || "—"]
@@ -186,6 +216,14 @@ function openDetail(id) {
     ["糖／100ml", comp.sugar100], ["蛋白／100ml", comp.protein100],
     ["脂肪／100ml", comp.fat100], ["熱量／100ml", comp.kcal100],
     ["添加物", comp.additives], ["備註", comp.extra]
+  ].map(([k,v]) => `<tr><td>${k}</td><td>${v || "—"}</td></tr>`).join("");
+  const sp = specOf(s);
+  const specEl = $("#spec-table");
+  if (specEl) specEl.innerHTML = [
+    ["C1 容量與包裝", sp.pack],
+    ["C2 保存方式", sp.storage],
+    ["C3 取得難度", sp.access],
+    ["C4 性價比", sp.value]
   ].map(([k,v]) => `<tr><td>${k}</td><td>${v || "—"}</td></tr>`).join("");
   $("#detail-style").textContent = s.style || "";
   $("#detail-pros").textContent = s.pros || "";
@@ -213,6 +251,11 @@ function fillForm(s) {
   f.name.value = d.name;
   f.brand.value = d.brand;
   f.origin.value = d.origin;
+  if (f.country) f.country.value = d.country || d.composition?.country || "HK";
+  if (f.spec_pack) f.spec_pack.value = specOf(d).pack;
+  if (f.spec_storage) f.spec_storage.value = specOf(d).storage;
+  if (f.spec_access) f.spec_access.value = specOf(d).access;
+  if (f.spec_value) f.spec_value.value = specOf(d).value;
   f.volume.value = d.volume;
   f.price.value = d.price;
   f.boughtAt.value = d.boughtAt;
@@ -258,6 +301,7 @@ function readForm() {
     name: f.name.value.trim(),
     brand: f.brand.value.trim(),
     origin: f.origin.value.trim(),
+    country: f.country ? f.country.value : "",
     volume: f.volume.value.trim(),
     price: f.price.value.trim(),
     boughtAt: f.boughtAt.value.trim(),
@@ -275,7 +319,12 @@ function readForm() {
       fat100: f.comp_fat100.value.trim(),
       kcal100: f.comp_kcal100.value.trim(),
       additives: f.comp_additives.value.trim(),
-      extra: f.comp_extra.value.trim()
+      extra: f.comp_extra.value.trim(),
+      country: f.country ? f.country.value : "",
+      pack: f.spec_pack ? f.spec_pack.value.trim() : "",
+      storage: f.spec_storage ? f.spec_storage.value.trim() : "",
+      access: f.spec_access ? f.spec_access.value.trim() : "",
+      valueNote: f.spec_value ? f.spec_value.value.trim() : ""
     },
     style: f.style.value.trim(),
     pros: f.pros.value.trim(),

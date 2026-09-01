@@ -320,6 +320,7 @@ textarea { min-height: 72px; resize: vertical; }
   color: var(--gold);
 }
 .dispatch p { margin: 10px 0 0; }
+.nation { letter-spacing: .04em; }
 .card .alien-line {
   margin-top: 12px;
   font-size: 13px;
@@ -370,6 +371,19 @@ body.is-editing .edit-panel { display: block; }
 }
 .gate-only { display: none !important; }
 body.is-officer .gate-only { display: inline-flex !important; }
+.auth-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; max-width: 560px; }
+.auth-box input { flex: 1; min-width: 140px; }
+body.is-officer #auth-box { display: none; }
+#btn-new-nav {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: linear-gradient(180deg, #5a3140, #3d2230);
+  color: #f8e8c8;
+  letter-spacing: .08em;
+  cursor: pointer;
+  font: inherit;
+}
 
 @media (max-width: 800px) {
   .hero, .detail-grid, .compare, .grid-2, .stats { grid-template-columns: 1fr; }

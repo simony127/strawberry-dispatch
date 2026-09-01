@@ -127,6 +127,9 @@
       <h3 class="section-title">B. 成分與營養</h3>
       <table><tbody id="comp-table"></tbody></table>
 
+      <h3 class="section-title">C. 規格與代價</h3>
+      <table><tbody id="spec-table"></tbody></table>
+
       <h3 class="section-title">D. 給長官的研判</h3>
       <div class="callout">
         <div><b>風格</b>　<span id="detail-style"></span></div>
@@ -195,7 +198,21 @@
           <div><label>樣本編號</label><input name="id" required></div>
           <div><label>產品名稱</label><input name="name" required></div>
           <div><label>品牌</label><input name="brand"></div>
-          <div><label>產地</label><input name="origin"></div>
+          <div><label>產地說明</label><input name="origin" placeholder="例如香港（元朗）"></div>
+          <div><label>評測國家／地區</label>
+            <select name="country">
+              <option value="HK">🇭🇰 香港</option>
+              <option value="JP">🇯🇵 日本</option>
+              <option value="TW">🇹🇼 台灣</option>
+              <option value="KR">🇰🇷 韓國</option>
+              <option value="CN">🇨🇳 中國大陸</option>
+              <option value="TH">🇹🇭 泰國</option>
+              <option value="SG">🇸🇬 新加坡</option>
+              <option value="US">🇺🇸 美國</option>
+              <option value="EU">🇪🇺 歐洲</option>
+              <option value="OT">🌐 其他</option>
+            </select>
+          </div>
           <div><label>容量／包裝</label><input name="volume"></div>
           <div><label>實付價格</label><input name="price"></div>
           <div><label>購買地</label><input name="boughtAt"></div>
@@ -246,6 +263,14 @@
         </div>
         <div><label>添加物</label><input name="comp_additives"></div>
         <div><label>成分備註</label><textarea name="comp_extra"></textarea></div>
+
+        <h3>C. 規格與代價</h3>
+        <div class="grid-2">
+          <div><label>C1 容量與包裝</label><input name="spec_pack"></div>
+          <div><label>C2 保存方式</label><input name="spec_storage"></div>
+        </div>
+        <div><label>C3 取得難度</label><input name="spec_access"></div>
+        <div><label>C4 性價比（文字，不進風味分）</label><input name="spec_value"></div>
 
         <h3>D. 研判</h3>
         <div><label>風格歸類</label><input name="style"></div>

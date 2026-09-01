@@ -48,7 +48,8 @@ window.Cloud = {
       repurchase: row.repurchase || "",
       verdict: row.verdict || "",
       memo: row.memo || "",
-      alien: row.alien || ""
+      alien: row.alien || "",
+      country: (row.composition && row.composition.country) || ""
     };
   },
 
