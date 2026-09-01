@@ -62,7 +62,12 @@ async function bootCloud() {
     const ok = await window.Cloud.init();
     if (ok) {
       const rows = await window.Cloud.fetchSamples();
-      if (rows && rows.length) state.data.samples = rows;
+      if (rows && rows.length) {
+        const map = {};
+        (state.data.samples || []).forEach(s => { if (s && s.id) map[s.id] = s; });
+        rows.forEach(r => { map[r.id] = Object.assign({}, map[r.id] || {}, r); });
+        state.data.samples = Object.keys(map).sort().map(k => map[k]);
+      }
     }
   } catch (err) {
     console.warn(err);
@@ -247,6 +252,9 @@ function fillForm(s) {
     style: "", pros: "", cons: "", grade: "C", repurchase: "", verdict: "", memo: ""
   };
   const d = s ? structuredClone(s) : empty;
+  ["spec_pack", "spec_storage", "spec_access", "spec_value"].forEach(n => {
+    if (f[n]) f[n].value = "";
+  });
   f.id.value = d.id;
   f.name.value = d.name;
   f.brand.value = d.brand;
