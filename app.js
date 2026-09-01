@@ -38,6 +38,17 @@ function save() {
   localStorage.setItem(STORE, JSON.stringify(state.data));
 }
 
+function migrateBerryChar() {
+  if (!state.data || !state.data.site) return;
+  const s = state.data.site;
+  if (s.title) s.title = String(s.title).replace(/苺/g, "莓");
+  if (s.adminCode) s.adminCode = String(s.adminCode).replace(/苺/g, "莓");
+  if (s.tagline) s.tagline = String(s.tagline).replace(/苺/g, "莓");
+  if (Array.isArray(s.intro)) {
+    s.intro = s.intro.map(line => typeof line === "string" ? line.replace(/苺/g, "莓") : line);
+  }
+}
+
 function syncAuthUI() {
   const user = window.Cloud && window.Cloud.user;
   if (user) {
@@ -53,6 +64,8 @@ function syncAuthUI() {
 
 async function bootCloud() {
   loadLocal();
+  migrateBerryChar();
+  save();
   if (!window.Cloud || !window.SUPABASE_ANON_KEY) {
     syncAuthUI();
     renderAll();
@@ -464,7 +477,7 @@ function resetDefaults() {
 
 function applyBranding() {
   const s = state.data.site || {};
-  const title = s.title || "苺星密報";
+  const title = s.title || "莓星密報";
   const en = s.enTitle || "BERRY DISPATCH";
   const tag = s.tagline || "";
   document.title = title;
@@ -484,7 +497,7 @@ function saveStats() {
   st.bestValue = $("#best-value").value;
   st.lastMode = $("#last-mode").value;
   st.lastValue = $("#last-value").value.trim();
-  state.data.site.title = ($("#site-title")?.value || "").trim() || "苺星密報";
+  state.data.site.title = ($("#site-title")?.value || "").trim() || "莓星密報";
   state.data.site.enTitle = ($("#site-en")?.value || "").trim();
   state.data.site.tagline = ($("#site-tag")?.value || "").trim();
   save();
@@ -517,8 +530,8 @@ function tryUnlock() {
     return;
   }
   const code = prompt("輸入潛伏者密語");
-  const expect = (state.data.site && state.data.site.adminCode) || "苺星指揮";
-  if (code && code.trim() === expect) {
+  const expect = (state.data.site && state.data.site.adminCode) || "莓星指揮";
+  if (code && ["莓星指揮", "苺星指揮", expect].includes(code.trim())) {
     setOfficer(true);
     state.editing = true;
     document.body.classList.add("is-editing");

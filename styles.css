@@ -46,6 +46,26 @@ body:after {
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><text y='58' font-size='52'>🛸</text></svg>") no-repeat center / contain;
   opacity: .22;
 }
+.orbit {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 6px;
+  font-size: 18px;
+  letter-spacing: .2em;
+  opacity: .82;
+}
+.orbit i { font-style: normal; filter: drop-shadow(0 2px 0 rgba(255,255,255,.6)); }
+.hero .stamp { position: relative; }
+.card { position: relative; overflow: hidden; }
+.card:after {
+  content: "🍓";
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: 16px;
+  opacity: .18;
+  pointer-events: none;
+}
 
 a { color: var(--rose-deep); }
 img { max-width: 100%; display: block; }

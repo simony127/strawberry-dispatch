@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>苺星密報</title>
+  <title>莓星密報｜地球潛伏者的草莓牛奶觀測報告</title>
+  <meta name="description" content="莓星密報（Berry Dispatch）是一份個人草莓牛奶觀測筆記。記錄色澤、香氣、草莓本味、口感與餘韻，並以外星人密報的口吻寫下研判。" />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://simony127.github.io/strawberry-dispatch/" />
+  <meta property="og:title" content="莓星密報" />
+  <meta property="og:description" content="地球潛伏者的草莓牛奶觀測報告。顏色、氣味、味道，一款都不能少。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://simony127.github.io/strawberry-dispatch/" />
+  <meta property="og:locale" content="zh_HK" />
+  <meta name="twitter:card" content="summary" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"莓星密報","alternateName":["Berry Dispatch","STRAWBERRY DISPATCH"],"url":"https://simony127.github.io/strawberry-dispatch/","inLanguage":"zh-Hant","description":"個人草莓牛奶觀測筆記"}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" rel="stylesheet">
@@ -11,7 +23,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#" data-page="home" onclick="event.preventDefault();document.querySelector('[data-page=home]').click()"><span id="brand-title">苺星密報</span> <small id="brand-en">BERRY DISPATCH</small></a>
+    <a class="brand" href="#" data-page="home" onclick="event.preventDefault();document.querySelector('[data-page=home]').click()"><span id="brand-title">莓星密報</span> <small id="brand-en">BERRY DISPATCH</small></a>
     <nav class="nav">
       <a href="#" data-page="home" class="active">指揮室</a>
       <a href="#" data-page="protocol">作業規程</a>
@@ -29,14 +41,17 @@
       <div class="hero">
         <div>
           <div class="stamp">✦ 地球潛伏任務／機密</div>
-          <h1 id="hero-title">苺星密報</h1>
+          <div class="orbit" aria-hidden="true">
+            <i>🍓</i><i>🥛</i><i>🛸</i><i>📡</i><i>🍓</i>
+          </div>
+          <h1 id="hero-title">莓星密報</h1>
           <p class="lead" id="hero-tag">地球潛伏者的草莓牛奶觀測報告。<br>顏色、氣味、味道，一款都不能少。</p>
         </div>
         <div class="intro">
           <p>本人其實是來自外太空的潛伏者。</p>
           <p>當初來地球執行觀察任務時，不小心喝到了草莓牛奶。那一瞬間，我確認了這東西就是征服地球的最終武器。甜美、溫順，卻能讓地球人自動繳械。</p>
           <p>為了製作出宇宙最強、足以讓全人類心甘情願臣服的草莓牛奶，我決定先把地球上現有的草莓牛奶全部分析一遍。顏色、香氣、草莓本味、口感、餘韻……一款都不能少。</p>
-          <p>這本手札，就是我的研究筆記。等研究完成之日，就是地球易主之時。</p>
+          <p>這份密報，就是我的觀測紀錄。等研究完成之日，就是地球易主之時。</p>
         </div>
       </div>
 
@@ -49,7 +64,7 @@
       <div class="edit-panel" id="stats-panel">
         <h3>觀測站設定</h3>
         <div class="grid-2" style="margin-bottom:14px">
-          <div><label>站名</label><input id="site-title" placeholder="苺星密報"></div>
+          <div><label>站名</label><input id="site-title" placeholder="莓星密報"></div>
           <div><label>英文代號</label><input id="site-en" placeholder="BERRY DISPATCH"></div>
         </div>
         <div><label>副標</label><input id="site-tag" placeholder="地球潛伏者的草莓牛奶觀測報告"></div>
@@ -287,7 +302,7 @@
     </section>
 
     <footer>
-      <span id="foot-title">苺星密報</span> · 地球潛伏者個人觀測，與任何品牌無隸屬關係。<br>
+      <span id="foot-title">莓星密報</span> · 地球潛伏者個人觀測，與任何品牌無隸屬關係。<br>
       訪客只能閱讀。觀測員請登入後再寫新標本。
       <div id="auth-box" class="auth-box">
         <input id="auth-email" type="email" placeholder="電郵">

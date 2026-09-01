@@ -1,7 +1,7 @@
-/* 苺星密報 — 公開預設資料 */
+/* 莓星密報 — 公開預設資料 */
 window.ICHIGO_DEFAULTS = {
   "site": {
-    "title": "苺星密報",
+    "title": "莓星密報",
     "enTitle": "STRAWBERRY DISPATCH",
     "tagline": "地球潛伏者的草莓牛奶觀測報告。顏色、氣味、味道，一款都不能少。",
     "intro": [
@@ -10,7 +10,7 @@ window.ICHIGO_DEFAULTS = {
       "為了製作出宇宙最強、足以讓全人類心甘情願臣服的草莓牛奶，我決定先把地球上現有的草莓牛奶全部分析一遍。顏色、香氣、草莓本味、口感、餘韻……一款都不能少。",
       "這份密報，就是我的觀測紀錄。等研究完成之日，就是地球易主之時。"
     ],
-    "adminCode": "苺星指揮",
+    "adminCode": "莓星指揮",
     "stats": {
       "bestMode": "auto",
       "bestValue": "",
