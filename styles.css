@@ -200,7 +200,28 @@ h1 {
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 28px 50px rgba(74,30,42,.12); }
-.card img { height: 200px; width: 100%; object-fit: cover; background: #f0e4e6; }
+.card > img { height: 200px; width: 100%; object-fit: cover; background: #f0e4e6; }
+.nation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 2px;
+  padding: 4px 10px 4px 6px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  letter-spacing: .08em;
+  color: var(--ink);
+}
+.nation-badge .flag {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08);
+}
+.nation-badge b { font-weight: 600; }
 .card .body { padding: 18px 20px 20px; }
 .card .id { font-size: 11px; letter-spacing: .18em; color: var(--muted); }
 .card h3 { margin: 6px 0 6px; font-size: 19px; font-family: "Noto Serif TC", serif; font-weight: 600; }

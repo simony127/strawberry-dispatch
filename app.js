@@ -92,17 +92,26 @@ function imgSrc(path) {
 }
 
 const COUNTRIES = {
-  HK: { flag: "🇭🇰", name: "香港" },
-  JP: { flag: "🇯🇵", name: "日本" },
-  TW: { flag: "🇹🇼", name: "台灣" },
-  KR: { flag: "🇰🇷", name: "韓國" },
-  CN: { flag: "🇨🇳", name: "中國大陸" },
-  TH: { flag: "🇹🇭", name: "泰國" },
-  SG: { flag: "🇸🇬", name: "新加坡" },
-  US: { flag: "🇺🇸", name: "美國" },
-  EU: { flag: "🇪🇺", name: "歐洲" },
-  OT: { flag: "🌐", name: "其他" }
+  HK: { iso: "hk", name: "香港" },
+  JP: { iso: "jp", name: "日本" },
+  TW: { iso: "tw", name: "台灣" },
+  KR: { iso: "kr", name: "韓國" },
+  CN: { iso: "cn", name: "中國大陸" },
+  TH: { iso: "th", name: "泰國" },
+  SG: { iso: "sg", name: "新加坡" },
+  US: { iso: "us", name: "美國" },
+  EU: { iso: "eu", name: "歐洲" },
+  OT: { iso: "", name: "其他" }
 };
+
+function nationBadge(sample) {
+  const g = countryOf(sample);
+  if (!g) return "";
+  const flag = g.iso
+    ? `<img class="flag" src="https://flagcdn.com/w80/${g.iso}.png" alt="${g.name}" width="22" height="16">`
+    : "";
+  return `<span class="nation-badge">${flag}<b>${g.name}</b></span>`;
+}
 
 function countryOf(sample) {
   const code = sample.country || sample.composition?.country || "";
@@ -142,7 +151,7 @@ function siteStats() {
 }
 
 function autoBest() {
-  const rank = { S: 6, A: 5, B: 4, C: 3, "C-": 2.5, "D+": 2, D: 1 };
+  const rank = { S: 6, A: 5, B: 4, "C+": 3.5, C: 3, "C-": 2.5, "D+": 2, D: 1 };
   const grades = state.data.samples.map(s => s.grade).filter(g => rank[g]);
   return grades.sort((a, b) => rank[b] - rank[a])[0] || "—";
 }
@@ -178,8 +187,9 @@ function renderHome() {
       ${s.image ? `<img src="${imgSrc(s.image)}" alt="${s.name}">` : `<div style="height:140px;background:${c?.hex || "#f3d0d4"}"></div>`}
       <div class="body">
         <div class="row-between"><span class="id">${s.id}</span><span class="grade ${s.grade}">${s.grade || "—"}</span></div>
+        ${nationBadge(s)}
         <h3>${s.name}</h3>
-        <div class="meta">${(() => { const g = countryOf(s); return g ? `<span class="nation">${g.flag} ${g.name}</span> · ` : ""; })()}${s.brand || ""} · ${s.volume || ""}</div>
+        <div class="meta">${s.brand || ""} · ${s.volume || ""}</div>
         <div style="margin-top:8px" class="chip"><span class="swatch" style="background:${c?.hex || "#eee"}"></span>${s.colorId || "未定色"} · 感官 ${avg(s) ?? "—"}</div>
         ${s.alien ? `<div class="alien-line">${alienBlurb(s.alien)}</div>` : ""}
       </div>
@@ -201,7 +211,7 @@ function openDetail(id) {
     : `<div style="height:280px;background:${c?.hex || "#f3d0d4"}"></div>`;
   $("#detail-kv").innerHTML = [
     ["品牌", s.brand],
-    ["國家／地區", (() => { const g = countryOf(s); return g ? g.flag + " " + g.name : s.origin; })()],
+    ["國家／地區", nationBadge(s) || s.origin],
     ["產地說明", s.origin], ["容量", s.volume],
     ["品飲日期", s.tastedOn], ["溫度", s.temp], ["售價", s.price || "未記入"],
     ["色號", `${s.colorId || "—"} ${c ? c.name : ""}`],
