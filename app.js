@@ -1,4 +1,4 @@
-const STORE = "ichigo-techou-v3";
+const STORE = "ichigo-techou-v4";
 const SCORE_KEYS = ["A1","A2","A3","A4","A5","A6","A7","A8","A9"];
 const SCORE_LABELS = {
   A1: "外觀整體",
@@ -477,7 +477,8 @@ function resetDefaults() {
 
 function applyBranding() {
   const s = state.data.site || {};
-  const title = s.title || "莓星密報";
+  const title = String(s.title || "莓星密報").replace(/苺/g, "莓");
+  if (s.title) s.title = title;
   const en = s.enTitle || "BERRY DISPATCH";
   const tag = s.tagline || "";
   document.title = title;
