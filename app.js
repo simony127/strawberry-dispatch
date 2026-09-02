@@ -113,6 +113,7 @@ const COUNTRIES = {
   TH: { iso: "th", name: "泰國" },
   SG: { iso: "sg", name: "新加坡" },
   US: { iso: "us", name: "美國" },
+  AU: { iso: "au", name: "澳洲" },
   EU: { iso: "eu", name: "歐洲" },
   OT: { iso: "", name: "其他" }
 };
@@ -164,7 +165,7 @@ function siteStats() {
 }
 
 function autoBest() {
-  const rank = { S: 6, A: 5, B: 4, "C+": 3.5, C: 3, "C-": 2.5, "D+": 2, D: 1 };
+  const rank = { S: 6, A: 5, "B+": 4.5, B: 4, "B-": 3.7, "C+": 3.5, C: 3, "C-": 2.5, "D+": 2, D: 1 };
   const grades = state.data.samples.map(s => s.grade).filter(g => rank[g]);
   return grades.sort((a, b) => rank[b] - rank[a])[0] || "—";
 }
