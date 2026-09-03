@@ -234,12 +234,20 @@ h1 {
   letter-spacing: .08em;
   color: var(--ink);
 }
-.nation-badge .flag {
+.nation-badge .flag,
+.nation-badge .flag-fallback {
   width: 22px;
-  height: 16px;
+  height: 15px;
   object-fit: cover;
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(0,0,0,.08);
+}
+.nation-badge .flag-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  font-size: 13px;
 }
 .nation-badge b { font-weight: 600; }
 .card .body { padding: 18px 20px 20px; }

@@ -131,8 +131,8 @@ function nationBadge(sample) {
   const g = countryOf(sample);
   if (!g) return "";
   const flag = g.iso
-    ? `<img class="flag" src="https://flagcdn.com/w80/${g.iso}.png" alt="${g.name}" width="22" height="16">`
-    : "";
+    ? `<img class="flag" src="https://flagcdn.com/w40/${g.iso}.png" srcset="https://flagcdn.com/w80/${g.iso}.png 2x" alt="${g.name}" width="22" height="15">`
+    : `<span class="flag-fallback" aria-hidden="true">🌐</span>`;
   return `<span class="nation-badge">${flag}<b>${g.name}</b></span>`;
 }
 
