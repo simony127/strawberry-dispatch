@@ -114,6 +114,14 @@ const COUNTRIES = {
   SG: { iso: "sg", name: "新加坡" },
   US: { iso: "us", name: "美國" },
   AU: { iso: "au", name: "澳洲" },
+  NZ: { iso: "nz", name: "紐西蘭" },
+  GB: { iso: "gb", name: "英國" },
+  FR: { iso: "fr", name: "法國" },
+  DE: { iso: "de", name: "德國" },
+  MY: { iso: "my", name: "馬來西亞" },
+  VN: { iso: "vn", name: "越南" },
+  ID: { iso: "id", name: "印尼" },
+  PH: { iso: "ph", name: "菲律賓" },
   EU: { iso: "eu", name: "歐洲" },
   OT: { iso: "", name: "其他" }
 };
@@ -127,9 +135,35 @@ function nationBadge(sample) {
   return `<span class="nation-badge">${flag}<b>${g.name}</b></span>`;
 }
 
+function guessCountryCode(sample) {
+  const code = (sample.country || sample.composition && sample.composition.country || "").toUpperCase();
+  if (COUNTRIES[code]) return code;
+  const blob = [sample.origin, sample.brand, sample.name, sample.composition && sample.composition.access].filter(Boolean).join(" ");
+  const rules = [
+    ["AU", /澳洲|澳大利亞|Australia|Rokeby/i],
+    ["NZ", /紐西蘭|新西兰|New Zealand/i],
+    ["JP", /日本|Japan|三佳利|桑格利亞|SANGARIA/i],
+    ["KR", /韓國|韩国|Korea|Binggrae|빙그레/i],
+    ["TW", /台灣|台湾|Taiwan/i],
+    ["HK", /香港|Hong Kong|十字牌|維他/i],
+    ["CN", /中國大陸|中国大陆|中國／|Mainland/i],
+    ["SG", /新加坡|Singapore/i],
+    ["TH", /泰國|泰国|Thailand/i],
+    ["US", /美國|美国|USA|United States/i],
+    ["GB", /英國|英国|UK|United Kingdom/i],
+    ["FR", /法國|法国|France/i],
+    ["DE", /德國|德国|Germany/i],
+    ["MY", /馬來|马来|Malaysia/i],
+    ["VN", /越南|Vietnam/i],
+    ["ID", /印尼|Indonesia/i],
+    ["PH", /菲律賓|菲律宾|Philippine/i]
+  ];
+  for (const [c, re] of rules) if (re.test(blob)) return c;
+  return "";
+}
+
 function countryOf(sample) {
-  const code = sample.country || sample.composition?.country || "";
-  return COUNTRIES[code] || null;
+  return COUNTRIES[guessCountryCode(sample)] || null;
 }
 
 function specOf(sample) {
