@@ -114,6 +114,7 @@ const COUNTRIES = {
   SG: { iso: "sg", name: "新加坡" },
   US: { iso: "us", name: "美國" },
   AU: { iso: "au", name: "澳洲" },
+  NL: { iso: "nl", name: "荷蘭" },
   NZ: { iso: "nz", name: "紐西蘭" },
   GB: { iso: "gb", name: "英國" },
   FR: { iso: "fr", name: "法國" },
@@ -140,7 +141,8 @@ function guessCountryCode(sample) {
   if (COUNTRIES[code]) return code;
   const blob = [sample.origin, sample.brand, sample.name, sample.composition && sample.composition.access].filter(Boolean).join(" ");
   const rules = [
-    ["AU", /澳洲|澳大利亞|Australia|Rokeby/i],
+    ["AU", /澳洲|澳大利亞|Australia|Rokeby|Pauls/i],
+    ["NL", /荷蘭|荷兰|Dutch Lady|子母/i],
     ["NZ", /紐西蘭|新西兰|New Zealand/i],
     ["JP", /日本|Japan|三佳利|桑格利亞|SANGARIA/i],
     ["KR", /韓國|韩国|Korea|Binggrae|빙그레/i],
