@@ -22,6 +22,15 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="sky" aria-hidden="true">
+    <span class="planet"></span>
+    <span class="saucer"></span>
+    <span class="milk-drop d1"></span>
+    <span class="milk-drop d2"></span>
+    <span class="berry b1"></span>
+    <span class="berry b2"></span>
+    <span class="orbit-ring"></span>
+  </div>
   <header class="topbar">
     <a class="brand" href="#" data-page="home" onclick="event.preventDefault();document.querySelector('[data-page=home]').click()"><span id="brand-title">莓星密報</span> <small id="brand-en">BERRY DISPATCH</small></a>
     <nav class="nav">
@@ -40,9 +49,9 @@
     <section id="page-home" class="page show">
       <div class="hero">
         <div>
-          <div class="stamp">✦ 地球潛伏任務／機密</div>
+          <div class="stamp">✦ 甜美侵略計畫／公開密報</div>
           <div class="orbit" aria-hidden="true">
-            <i>🍓</i><i>🥛</i><i>🛸</i><i>📡</i><i>🍓</i>
+            <i>🍓</i><i>🛸</i><i>🌍</i><i>🥛</i>
           </div>
           <h1 id="hero-title">莓星密報</h1>
           <p class="lead" id="hero-tag">地球潛伏者的草莓牛奶觀測報告。<br>顏色、氣味、味道，一款都不能少。</p>
@@ -99,6 +108,7 @@
       </div>
 
       <h2 class="section-title">地球回收標本</h2>
+      <p class="meta squad-hint">歡迎各位潛伏者檢閲報告，祝各位潛伏成功。</p>
       <div class="toolbar edit-only">
         <button class="btn primary" type="button" id="btn-new">＋ 登錄標本</button>
         <button class="btn" type="button" id="btn-export">匯出密報 JSON</button>
@@ -312,15 +322,16 @@
     </section>
 
     <footer>
-      <span id="foot-title">莓星密報</span> · 地球潛伏者個人觀測，與任何品牌無隸屬關係。<br>
-      訪客只能閱讀。觀測員請登入後再寫新標本。
-      <div id="auth-box" class="auth-box">
+      <span id="foot-title">莓星密報</span> · 甜美侵略計畫公開檔。與任何地球品牌無隸屬關係。<br>
+      本密報放在地球上，方便更多潛伏者繳交樣本。
+      <button type="button" id="btn-gate" class="text-link">潛伏者通道</button>
+      <div id="auth-box" class="auth-box hidden">
+        <p class="meta">組員在此登入後可登錄新標本。</p>
         <input id="auth-email" type="email" placeholder="電郵">
         <input id="auth-pass" type="password" placeholder="密碼">
         <button type="button" class="btn" id="btn-login">登入</button>
         <button type="button" class="btn" id="btn-signup">註冊</button>
       </div>
-      <button type="button" id="btn-gate" class="text-link">本機密語通道</button>
     </footer>
   </main>
 

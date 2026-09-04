@@ -20,32 +20,106 @@ body {
   margin: 0;
   font-family: "Noto Sans TC", "PingFang HK", "Microsoft JhengHei", sans-serif;
   color: var(--ink);
-  background-color: var(--paper);
+  background-color: #f6e6ea;
   background-image:
-    radial-gradient(circle at 12% 8%, rgba(255, 210, 220, .55), transparent 28%),
-    radial-gradient(circle at 88% 0%, rgba(216, 196, 230, .35), transparent 32%),
-    radial-gradient(circle at 70% 90%, rgba(232, 212, 176, .22), transparent 26%),
-    radial-gradient(#d7b8be 0.8px, transparent 0.8px);
-  background-size: auto, auto, auto, 28px 28px;
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 170, 190, .45), transparent 58%),
+    radial-gradient(ellipse 50% 40% at 88% 88%, rgba(186, 160, 220, .22), transparent 55%),
+    radial-gradient(#c45b6a 0.9px, transparent 0.9px),
+    radial-gradient(#8aa0d0 0.8px, transparent 0.8px);
+  background-size: auto, auto, 48px 48px, 86px 86px;
+  background-position: 0 0, 0 0, 0 0, 24px 16px;
   line-height: 1.75;
 }
-body:before, body:after {
-  content: "";
+.sky {
   position: fixed;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
 }
-body:before {
-  width: 90px; height: 90px; top: 90px; left: 3vw;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><text y='58' font-size='58'>🍓</text></svg>") no-repeat center / contain;
-  opacity: .28;
-  transform: rotate(-18deg);
+.sky .planet {
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  width: 340px;
+  height: 340px;
+  margin-left: -170px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 32%, #fff8fb 0 12%, transparent 13%),
+    radial-gradient(circle at 58% 60%, #ff9aaa 0 14%, transparent 15%),
+    radial-gradient(circle at 30% 68%, #f4dfe6 0 16%, transparent 17%),
+    radial-gradient(circle at 40% 40%, #f7c2d0, #c45b6a 55%, #5a2a48);
+  box-shadow: 0 0 0 2px rgba(120, 220, 255, .35), 0 0 80px rgba(255, 130, 170, .25);
+  opacity: .18;
 }
-body:after {
-  width: 70px; height: 70px; bottom: 40px; right: 4vw;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><text y='58' font-size='52'>🛸</text></svg>") no-repeat center / contain;
-  opacity: .22;
+.sky .orbit-ring {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 420px;
+  height: 420px;
+  margin-left: -210px;
+  border: 2px solid rgba(90, 210, 255, .28);
+  border-radius: 50%;
+  box-shadow: 0 0 24px rgba(90, 210, 255, .12);
 }
+.sky .orbit-ring:after {
+  content: "";
+  position: absolute;
+  inset: 36px;
+  border: 2px dashed rgba(255, 160, 190, .35);
+  border-radius: 50%;
+}
+.sky .saucer {
+  position: absolute;
+  left: 12vw;
+  top: 18vh;
+  width: 86px;
+  height: 30px;
+  background: linear-gradient(#f7fbff, #c9d8ee);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(120, 220, 255, .45), 0 8px 0 #8aa0c8;
+  opacity: .7;
+}
+.sky .saucer:before {
+  content: "";
+  position: absolute;
+  left: 26px; top: -14px;
+  width: 34px; height: 24px;
+  background: radial-gradient(circle at 50% 40%, #fff, #f4b4c8);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(255, 170, 200, .7);
+}
+.sky .milk-drop {
+  position: absolute;
+  width: 48px; height: 48px;
+  background: radial-gradient(circle at 35% 30%, #fff, #ffd0dc 60%, #e89aaa);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(255, 180, 200, .35);
+  opacity: .45;
+}
+.sky .d1 { left: 8vw; bottom: 16vh; }
+.sky .d2 { right: 10vw; bottom: 28vh; transform: scale(.75); }
+.sky .berry {
+  position: absolute;
+  width: 38px; height: 44px;
+  background: radial-gradient(circle at 40% 35%, #ff9aaa, #c83b55);
+  border-radius: 50% 50% 48% 48%;
+  opacity: .4;
+  box-shadow: 0 0 16px rgba(255, 80, 120, .25);
+}
+.sky .berry:before {
+  content: "";
+  position: absolute;
+  left: 11px; top: -8px;
+  width: 16px; height: 12px;
+  background: #7dbe6a;
+  border-radius: 40%;
+}
+.sky .b1 { left: 18vw; top: 38vh; }
+.sky .b2 { right: 16vw; top: 22vh; transform: rotate(22deg); }
+.topbar, .wrap { position: relative; z-index: 1; }
 .orbit {
   display: flex;
   gap: 10px;
@@ -56,6 +130,29 @@ body:after {
 }
 .orbit i { font-style: normal; filter: drop-shadow(0 2px 0 rgba(255,255,255,.6)); }
 .hero .stamp { position: relative; }
+.hud {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px dashed rgba(184,144,90,.55);
+  border-radius: 999px;
+  background: rgba(255,250,246,.75);
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: var(--plum);
+}
+.squad-hint { margin: -8px 0 18px; }
+.mission-stamp {
+  display: inline-block;
+  margin: 8px 0 0;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #fff3f0;
+  border: 1px solid rgba(196,91,106,.28);
+  color: var(--rose-deep);
+  font-size: 11px;
+  letter-spacing: .12em;
+}
 .card { position: relative; overflow: hidden; }
 .card:after {
   content: "🍓";

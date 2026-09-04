@@ -20,6 +20,16 @@ const state = {
   formMode: "create"
 };
 
+function mergeDefaults() {
+  const def = window.ICHIGO_DEFAULTS || {};
+  if (!state.data.colors) state.data.colors = [];
+  const haveC = new Set(state.data.colors.map(c => c.id));
+  (def.colors || []).forEach(c => { if (!haveC.has(c.id)) { state.data.colors.push(c); haveC.add(c.id); } });
+  if (!state.data.samples) state.data.samples = [];
+  const haveS = new Set(state.data.samples.map(s => s.id));
+  (def.samples || []).forEach(s => { if (!haveS.has(s.id)) state.data.samples.push(s); });
+}
+
 function loadLocal() {
   try {
     const raw = localStorage.getItem(STORE);
@@ -27,6 +37,7 @@ function loadLocal() {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.samples) {
         state.data = parsed;
+        mergeDefaults();
         return;
       }
     }
@@ -58,7 +69,7 @@ function syncAuthUI() {
     if ($("#auth-box")) $("#auth-box").classList.add("hidden");
   } else {
     if ($("#auth-label")) $("#auth-label").textContent = "";
-    if ($("#auth-box")) $("#auth-box").classList.remove("hidden");
+    if ($("#auth-box")) $("#auth-box").classList.add("hidden");
   }
 }
 
@@ -176,6 +187,17 @@ function specOf(sample) {
     access: sample.spec?.access || c.access || "",
     value: sample.spec?.value || c.valueNote || ""
   };
+}
+
+function missionStamp(s) {
+  const blob = [s.style, s.memo, s.verdict, s.alien, s.grade].join(" ");
+  if (/反偵察|詐騙|巧克力/.test(blob)) return "疑似反偵察";
+  if (/過家家|幼體|兒童|勞蘇/.test(blob)) return "幼體專用";
+  if (/多巴胺|奶昔|太甜|齁/.test(blob)) return "多巴胺事故";
+  if (/蛋白|健康飲/.test(blob)) return "營養宗教";
+  if (["S", "A", "B+", "B"].includes(s.grade)) return "武器候補";
+  if (["D", "D+"].includes(s.grade)) return "負面教材";
+  return "觀測完畢";
 }
 
 function alienBlurb(text) {
@@ -625,7 +647,11 @@ window.addEventListener("DOMContentLoaded", () => {
   $("#btn-export").onclick = exportJson;
   $("#btn-reset").onclick = resetDefaults;
   if ($("#btn-save-stats")) $("#btn-save-stats").onclick = saveStats;
-  if ($("#btn-gate")) $("#btn-gate").onclick = tryUnlock;
+  if ($("#btn-gate")) $("#btn-gate").onclick = () => {
+    const box = $("#auth-box");
+    if (!box) return;
+    box.classList.toggle("hidden");
+  };
   $("#file-import").onchange = (e) => {
     const f = e.target.files[0];
     if (f) importJson(f);
